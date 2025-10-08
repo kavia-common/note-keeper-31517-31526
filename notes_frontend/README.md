@@ -1,65 +1,67 @@
-# Qwik City App ⚡️
+# Notes Frontend (Qwik + Ocean Professional)
 
-- [Qwik Docs](https://qwik.dev/)
-- [Discord](https://qwik.dev/chat)
-- [Qwik GitHub](https://github.com/QwikDev/qwik)
-- [@QwikDev](https://twitter.com/QwikDev)
-- [Vite](https://vitejs.dev/)
+A modern Qwik notes application with create, edit, delete, and list functionality. Data persists in `localStorage` initially and is abstracted via a storage service so it can be swapped for a backend later.
 
----
+- Framework: Qwik + Qwik City
+- Theme: Ocean Professional (blue + amber accents, subtle gradients, rounded corners)
+- Persistence: localStorage (`notes_app.v1`)
+- Port: 3000 (configured in `vite.config.ts`)
+
+## Features
+
+- View a list of notes with title and last updated time
+- Create a new note via an accessible modal editor
+- Edit an existing note with the same modal editor
+- Delete a note with confirmation
+- Persist notes across reloads
+- Responsive and accessible UI: Esc to close modal, focus management, keyboard navigation
+
+## Quick Start
+
+```bash
+npm install
+npm start   # runs on http://localhost:3000
+```
+
+Preview production build:
+
+```bash
+npm run preview
+```
 
 ## Project Structure
 
-This project is using Qwik with [QwikCity](https://qwik.dev/qwikcity/overview/). QwikCity is just an extra set of tools on top of Qwik to make it easier to build a full site, including directory-based routing, layouts, and more.
-
-Inside your project, you'll see the following directory structure:
-
 ```
-├── public/
-│   └── ...
-└── src/
-    ├── components/
-    │   └── ...
-    └── routes/
-        └── ...
-```
-
-- `src/routes`: Provides the directory-based routing, which can include a hierarchy of `layout.tsx` layout files, and an `index.tsx` file as the page. Additionally, `index.ts` files are endpoints. Please see the [routing docs](https://qwik.dev/qwikcity/routing/overview/) for more info.
-
-- `src/components`: Recommended directory for components.
-
-- `public`: Any static assets, like images, can be placed in the public directory. Please see the [Vite public directory](https://vitejs.dev/guide/assets.html#the-public-directory) for more info.
-
-## Add Integrations and deployment
-
-Use the `npm run qwik add` command to add additional integrations. Some examples of integrations includes: Cloudflare, Netlify or Express Server, and the [Static Site Generator (SSG)](https://qwik.dev/qwikcity/guides/static-site-generation/).
-
-```shell
-npm run qwik add # or `yarn qwik add`
+src/
+  components/
+    Modal.tsx          # Accessible modal
+    NoteEditor.tsx     # Create/edit form
+    NoteItem.tsx       # Single note row with actions
+    NoteList.tsx       # List with empty state
+  routes/
+    index.tsx          # Main page: list + open modal
+    layout.tsx         # Layout wrapper
+  services/
+    storage.ts         # StorageService interface + localStorage impl
+  styles/
+    theme.css          # Ocean Professional theme
+  global.css           # Basic global resets
+  root.tsx             # App root (imports theme)
+types/
+  note.ts              # Note model
 ```
 
-## Development
+## Storage service
 
-Development mode uses [Vite's development server](https://vitejs.dev/). The `dev` command will server-side render (SSR) the output during development.
+The `StorageService` interface in `src/services/storage.ts` provides `list`, `create`, `update`, `remove`, and `get`. The default implementation uses `localStorage`. To swap in a backend later, implement the same interface and export it as `storage`.
 
-```shell
-npm start # or `yarn start`
-```
+## Accessibility
 
-> Note: during dev mode, Vite may request a significant number of `.js` files. This does not represent a Qwik production build.
+- Modal traps focus, restores focus on close
+- Escape key closes the modal
+- Buttons have labels, proper roles and aria attributes
 
-## Preview
+## Notes
 
-The preview command will create a production build of the client modules, a production build of `src/entry.preview.tsx`, and run a local server. The preview server is only for convenience to preview a production build locally and should not be used as a production server.
-
-```shell
-npm run preview # or `yarn preview`
-```
-
-## Production
-
-The production build will generate client and server modules by running both client and server build commands. The build command will use Typescript to run a type check on the source code.
-
-```shell
-npm run build # or `yarn build`
-```
+- No environment variables required at this time
+- When a backend/database is introduced, reuse the service interface
